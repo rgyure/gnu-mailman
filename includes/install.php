@@ -1,6 +1,14 @@
 <?php
 
-// function to create defaults
+/*******************************************
+ * GNU-Mailman Installation Functions
+*******************************************/
+
+/**
+ * Function to setup plugin defaults on plugin activation
+ *
+ * @since   1.0.0
+ */
 function gm_options_install() {
 
 	// Set Default Frequency
@@ -8,5 +16,4 @@ function gm_options_install() {
 
 }
 
-// run the install scripts upon plugin activation
 register_activation_hook( GM_PLUGIN_FILE, 'gm_options_install' );

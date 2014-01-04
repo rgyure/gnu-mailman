@@ -3,6 +3,10 @@
  * GNU-Mailman Admin Settings Page
 *******************************************/
 
+/**
+ * Admin Area - Settings Page HTML
+ * @since   1.0.0
+ */
 function gm_settings_page() {
 
 	if ( !current_user_can( 'manage_options' ) )  {

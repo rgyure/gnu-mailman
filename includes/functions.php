@@ -7,7 +7,8 @@
 /**
  * Return the Update Frequency of Mailing List data
  *
- * @return int Number of Seconds
+ * @since   1.0.0
+ * @return	int	Number of Seconds
  */
 function gm_get_update_frequency(){
 	return (int) get_site_option('gnumailman_update_frequency');
@@ -16,6 +17,7 @@ function gm_get_update_frequency(){
 /**
  * Return an array of mailing lists and settings
  *
+ * @since   1.0.0
  * @return array
  */
 function gm_get_mailing_lists(){
@@ -29,7 +31,8 @@ function gm_get_mailing_lists(){
 /**
  * Set an array of mailing lists to WP settings
  *
- * @param array $listArray Array of Mailing Lists
+ * @since   1.0.0
+ * @param	array	$listArray	Array of Mailing Lists
  */
 function gm_set_mailing_lists($listArray){
 	if (!is_array($listArray))
@@ -41,7 +44,8 @@ function gm_set_mailing_lists($listArray){
 /**
  * Return a single mailing list
  *
- * @param int $listId Mailing List Id
+ * @since   1.0.0
+ * @param	int	$listId	Mailing List Id
  * @return array
  */
 function gm_get_mailing_list($listId){
@@ -58,8 +62,9 @@ function gm_get_mailing_list($listId){
 /**
  * Get list of mailing lists users is subscribed to.
  *
- * @param int $userId Wordpress User Id
- * @return array Array of Lists Subscribed To (e.g. array(1, 2, 5) )
+ * @since   1.0.0
+ * @param	int	$userId	Wordpress User Id
+ * @return	array	Array of Lists Subscribed To (e.g. array(1, 2, 5) )
  */
 function gm_get_user_subscriptions($userId = NULL){
 	if ($userId == NULL)
@@ -79,8 +84,9 @@ function gm_get_user_subscriptions($userId = NULL){
 /**
  * Query Mailman for subscriptions and update local cache
  *
- * @param int $userId Wordpress User Id (NULL will use current user)
- * @return array
+ * @since   1.0.0
+ * @param	int	$userId	Wordpress User Id (NULL will use current user)
+ * @return	array
  */
 function gm_update_user_subscriptions($userId = NULL){
 	if ($userId == NULL)
@@ -109,9 +115,10 @@ function gm_update_user_subscriptions($userId = NULL){
 /**
  * Subscribe a User to a List
  *
- * @param int $listId Mailing List Id
- * @param int $userId Wordpress User Id (NULL will use current user)
- * @return int
+ * @since   1.0.0
+ * @param	int	$listId	Mailing List Id
+ * @param	int	$userId	Wordpress User Id (NULL will use current user)
+ * @return	bool
  */
 function gm_subscribe_user_list($listId, $userId = NULL){
 	$list = gm_get_mailing_list($listId);
@@ -137,9 +144,10 @@ function gm_subscribe_user_list($listId, $userId = NULL){
 /**
  * Unsubscribe a User to a List
  *
- * @param int $listId Mailing List Id
- * @param int $userId Wordpress User Id (NULL will use current user)
- * @return int
+ * @since   1.0.0
+ * @param	int	$listId	Mailing List Id
+ * @param	int	$userId	Wordpress User Id (NULL will use current user)
+ * @return	bool
  */
 function gm_unsubscribe_user_list($listId, $userId = NULL){
 	$list = gm_get_mailing_list($listId);

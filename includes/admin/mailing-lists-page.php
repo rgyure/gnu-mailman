@@ -3,6 +3,10 @@
  * GNU-Mailman Admin Mailing Lists Page
 *******************************************/
 
+/**
+ * Admin Area - Mailing Lists Page HTML
+ * @since   1.0.0
+ */
 function gm_mailing_lists_page() {
 
 	if ( !current_user_can( 'manage_options' ) )  {

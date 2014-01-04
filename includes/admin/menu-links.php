@@ -4,6 +4,10 @@
  * GNU-Mailman Admin Menu
 *******************************************/
 
+/**
+ * Function to Setup Menu Links in Wordpress
+ * @since   1.0.0
+ */
 function gm_settings_menu() {
 	add_menu_page( __( 'Mailman Integration', 'gm' ), __( 'Mailman', 'gm' ), 'manage_options', 'gnu-mailman', 'gm_admin_page');
 	$gm_mailing_list_page 		= add_submenu_page( 'gnu-mailman', __( 'Mailing Lists', 'gm' ), __( 'Lists', 'gm' ), 'manage_options', 'gnu-mailman-lists', 'gm_mailing_lists_page' );

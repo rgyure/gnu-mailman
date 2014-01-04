@@ -3,6 +3,10 @@
  * GNU-Mailman User Profile Page
 *******************************************/
 
+/**
+ * HTML Layout for User Profile Page
+ * @since   1.0.0
+ */
 function gm_user_profile_page() {
 ?>
 	<h3>Mailing Lists</h3>
@@ -30,6 +34,10 @@ function gm_user_profile_page() {
 add_action('show_user_profile', 'gm_user_profile_page');
 add_action('edit_user_profile', 'gm_user_profile_page');
 
+/**
+ * Function to Handle POST update of User Profile Page
+ * @since   1.0.0
+ */
 function gm_user_profile_update($userId, $oldUserData) {
 	$user_info = get_userdata($userId);
 

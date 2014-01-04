@@ -1,37 +1,102 @@
 <?php
 /**
- * Subscription Action: do unsubscription
+ * GNU-Mailman Integration
+ *
+ * @package   Mailman
+ * @author    Ryan Gyure <me@ryan.gy>
+ * @license   GPL-2.0+
+ * @link      http://blog.ryan.gy/applications/wordpress/gnu-mailman/
+ * @copyright 2014 Ryan Gyure
  */
-define('USER_MAILMAN_REGISTER_DO_UNSUBSCRIBE', -1);
 
 /**
- * Subscription Status: unsubscribed
+ * Main Plugin class.
+ *
+ * @package Mailman
+ * @author  Ryan Gyure <me@ryan.gy>
  */
-define('USER_MAILMAN_REGISTER_UNSUBSCRIBED', 0);
-
-/**
- * Subscription Status: subscribed but temporarily disabled
- */
-define('USER_MAILMAN_REGISTER_SUBSCRIBED_DISABLED', 1);
-
-/**
- * Subscription Status: subscribed, receive digests
- */
-define('USER_MAILMAN_REGISTER_SUBSCRIBED_DIGEST', 2); // @todo
-
-/**
- * Subscription Status: subscribed, normal delivery
- */
-define('USER_MAILMAN_REGISTER_SUBSCRIBED_NORMAL', 3);
-
 class Mailman
 {
 
+	/**
+	 * Subscription Action: do unsubscription
+	 *
+	 * @since   1.0.0
+	 * @var     int
+	 */
+	const USER_MAILMAN_REGISTER_DO_UNSUBSCRIBE = -1;
+
+	/**
+	 * Subscription Status: unsubscribed
+	 *
+	 * @since   1.0.0
+	 * @var     int
+	 */
+	const USER_MAILMAN_REGISTER_UNSUBSCRIBED = 0;
+
+	/**
+	 * Subscription Status: subscribed but temporarily disabled
+	 *
+	 * @since   1.0.0
+	 * @var     int
+	 */
+	const USER_MAILMAN_REGISTER_SUBSCRIBED_DISABLED = 1;
+
+	/**
+	 * Subscription Status: subscribed, receive digests
+	 *
+	 * @since   1.0.0
+	 * @var     int
+	 * @todo	Need to complete functionality associated with this value.
+	 */
+	const USER_MAILMAN_REGISTER_SUBSCRIBED_DIGEST = 2;
+
+	/**
+	 * Subscription Status: subscribed, normal delivery
+	 *
+	 * @since   1.0.0
+	 * @var     int
+	 */
+	const USER_MAILMAN_REGISTER_SUBSCRIBED_NORMAL = 3;
+
+	/**
+	 * Mailing List URL
+	 *
+	 * @since   1.0.0
+	 * @var     string
+	 */
 	private $_mailingListUrl;
+
+	/**
+	 * Mailing List Password
+	 *
+	 * @since   1.0.0
+	 * @var     string
+	 */
 	private $_mailingListPassword;
+
+	/**
+	 * Full Name of User
+	 *
+	 * @since   1.0.0
+	 * @var     string
+	 */
 	private $_fullName;
+
+	/**
+	 * Email Address of User
+	 *
+	 * @since   1.0.0
+	 * @var     string
+	 */
 	private $_emailAddress;
 
+	/**
+	 * Initialize the plugin by setting the mailing list URL and password as well as the user's email
+	 * and user's full name.
+	 *
+	 * @since     1.0.0
+	 */
 	function __construct($mailingListUrl, $mailingListPassword, $emailAddress = NULL, $fullName = NULL)
 	{
 		$this->_mailingListUrl = $mailingListUrl;
@@ -50,7 +115,8 @@ class Mailman
 	/**
 	 * Check if user is subscribed to List
 	 *
-	 * @return int
+	 * @since	1.0.0
+	 * @return	int
 	 */
 	public function isUserSubscribed() {
 		$sub = $this->_mailman_get_subscription();
@@ -60,19 +126,21 @@ class Mailman
 	/**
 	 * Subscribe User to List
 	 *
-	 * @return boolean
+	 * @since	1.0.0
+	 * @return	boolean
 	 */
 	public function subscribe() {
-		return $this->_mailman_subscription_update(USER_MAILMAN_REGISTER_SUBSCRIBED_NORMAL);
+		return $this->_mailman_subscription_update(self::USER_MAILMAN_REGISTER_SUBSCRIBED_NORMAL);
 	}
 
 	/**
 	 * Unsubscribe User to List
 	 *
-	 * @return boolean
+	 * @since   1.0.0
+	 * @return	boolean
 	 */
 	public function unsubscribe() {
-		return $this->_mailman_subscription_update(USER_MAILMAN_REGISTER_DO_UNSUBSCRIBE);
+		return $this->_mailman_subscription_update(self::USER_MAILMAN_REGISTER_DO_UNSUBSCRIBE);
 	}
 
 	private function _mailman_get_subscription()
@@ -89,14 +157,14 @@ class Mailman
 		if ($httpreq->umr_ok)
 		{
 			$subscription['mod'] = 0;
-			$subscription['status'] = USER_MAILMAN_REGISTER_UNSUBSCRIBED;
+			$subscription['status'] = self::USER_MAILMAN_REGISTER_UNSUBSCRIBED;
 
 			if (preg_match('/INPUT .*name="' . $str_email . '_unsub"/i', $httpreq->data))
 			{
 				$subscription['status'] = USER_MAILMAN_REGISTER_SUBSCRIBED_NORMAL;
 				if (preg_match('/INPUT .*name="' . $str_email . '_digest".* value="on"/i', $httpreq->data))
 				{
-					$subscription['status'] = USER_MAILMAN_REGISTER_SUBSCRIBED_DIGEST;
+					$subscription['status'] = self::USER_MAILMAN_REGISTER_SUBSCRIBED_DIGEST;
 				}
 				if (preg_match('/INPUT .*name="' . $str_email . '_mod".* value="on"/i', $httpreq->data))
 				{
@@ -104,7 +172,7 @@ class Mailman
 				}
 				if (preg_match('/INPUT .*name="' . $str_email . '_nomail".* value="on" CHECKED >(\[\w\])/i', $httpreq->data, $match))
 				{
-					$subscription['status'] = USER_MAILMAN_REGISTER_SUBSCRIBED_DISABLED;
+					$subscription['status'] = self::USER_MAILMAN_REGISTER_SUBSCRIBED_DISABLED;
 					if ($match[1] != t("[A]"))
 					{
 						$subscription['error'] = "Delivery for list was disabled by the system probably due to excessive bouncing from the member's address";
@@ -126,7 +194,7 @@ class Mailman
 		switch ($actionType)
 		{
 			// Unsubscribe
-			case USER_MAILMAN_REGISTER_DO_UNSUBSCRIBE:
+			case self::USER_MAILMAN_REGISTER_DO_UNSUBSCRIBE:
 				/** @todo These Mailman settings should be moved to the admin interface **/
 				$regurl .= '/remove?send_unsub_ack_to_this_batch=1';
 				$regurl .= '&send_unsub_notifications_to_list_owner=1';
@@ -135,7 +203,7 @@ class Mailman
 				break;
 
 			// New subscription
-			case USER_MAILMAN_REGISTER_SUBSCRIBED_NORMAL:
+			case self::USER_MAILMAN_REGISTER_SUBSCRIBED_NORMAL:
 
 				// If Full Name exists, use that
 				if ($this->_fullName == '') {
@@ -172,6 +240,13 @@ class Mailman
 		return TRUE;
 	}
 
+	/**
+	 * Query Mailman Server
+	 *
+	 * @since   1.0.0
+	 * @param	string	$regurl
+	 * @return	stdClass
+	 */
 	private function _mailman_parse_http($regurl)
 	{
 		// Get cURL resource
@@ -183,6 +258,7 @@ class Mailman
 		curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
 
 		// Send the request & save response to $resp
+		$httpobj = new stdClass();
 		$httpobj->umr_ok = 1;
 		$httpobj->data = $resp = curl_exec($curl);
 		$httpobj->code = 200;
@@ -216,8 +292,9 @@ class Mailman
 	/**
 	 * Set User's Email Address
 	 *
-	 * @param string $emailAddress User's Email Address
-	 * @return Mailman
+	 * @since   1.0.0
+	 * @param	string	$emailAddress	User's Email Address
+	 * @return	Mailman
 	 */
 	public function setEmailAddress($emailAddress) {
 		$this->_emailAddress = $emailAddress;
@@ -227,7 +304,8 @@ class Mailman
 	/**
 	 * Return User's Email Address
 	 *
-	 * @return string User's Email Address
+	 * @since   1.0.0
+	 * @return	string	User's Email Address
 	 */
 	public function getEmailAddress() {
 		return $this->_emailAddress;
@@ -236,8 +314,9 @@ class Mailman
 	/**
 	 * Set User's Full Name
 	 *
-	 * @param string $fullName User's Full Name
-	 * @return Mailman
+	 * @since   1.0.0
+	 * @param	string	$fullName	User's Full Name
+	 * @return	Mailman
 	 */
 	public function setFullName($fullName) {
 		$this->_fullName = $fullName;
@@ -247,7 +326,8 @@ class Mailman
 	/**
 	 * Return User's Full Name
 	 *
-	 * @return string User's Full Name
+	 * @since   1.0.0
+	 * @return	string	User's Full Name
 	 */
 	public function getFullName() {
 		return $this->_fullName;
