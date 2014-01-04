@@ -8,11 +8,11 @@ Stable tag: trunk
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Simple integration of GNU Mailmain into wordpress.
+Simple integration of GNU Mailman into Wordpress.
 
 == Description ==
 
-Integrate GNU Mailmain into your wordpress website.  This script allows administrators to add multiple mailmain mailing lists for users to subscribe to.  Users can subscribe or unsubscribe to any of the mailing lists through their user profile.
+Integrate GNU Mailman into your Wordpress website.  This script allows administrators to add multiple mailman mailing lists for users to subscribe to.  Users can subscribe or unsubscribe to any of the mailing lists through their user profile.
 
 == Installation ==
 
