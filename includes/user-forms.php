@@ -7,13 +7,13 @@
  * HTML Layout for User Profile Page
  * @since   1.0.0
  */
-function gm_user_profile_page() {
+function gm_user_profile_page($user) {
 ?>
 	<h3>Mailing Lists</h3>
 	<table class="form-table">
 		<?php
 		// Get Current Subscriptions
-		$mailingListSubscriptions = gm_get_user_subscriptions();
+		$mailingListSubscriptions = gm_get_user_subscriptions($user->ID);
 
 		// Get Current Mailing Lists and Loop
 		$mailingLists = gm_get_mailing_lists();
@@ -44,7 +44,7 @@ function gm_user_profile_update($userId, $oldUserData) {
 	if (isset($_POST['submit']))
 	{
 		// Get Current Subscriptions
-		$mailingListSubscriptions = gm_get_user_subscriptions();
+		$mailingListSubscriptions = gm_get_user_subscriptions($userId);
 
 		// If Email address changed, remove from all active lists
 		if ($oldUserData->data->user_email != $user_info->data->user_email){

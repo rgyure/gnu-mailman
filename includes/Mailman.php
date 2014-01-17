@@ -116,11 +116,17 @@ class Mailman
 	 * Check if user is subscribed to List
 	 *
 	 * @since	1.0.0
-	 * @return	int
+	 * @return	bool
 	 */
 	public function isUserSubscribed() {
 		$sub = $this->_mailman_get_subscription();
-		return (int) $sub;
+		
+		if ($sub == self::USER_MAILMAN_REGISTER_SUBSCRIBED_NORMAL OR $sub == self::USER_MAILMAN_REGISTER_SUBSCRIBED_DIGEST)
+		{
+			return TRUE;
+		}
+		
+		return FALSE;
 	}
 
 	/**
@@ -161,7 +167,7 @@ class Mailman
 
 			if (preg_match('/INPUT .*name="' . $str_email . '_unsub"/i', $httpreq->data))
 			{
-				$subscription['status'] = USER_MAILMAN_REGISTER_SUBSCRIBED_NORMAL;
+				$subscription['status'] = self::USER_MAILMAN_REGISTER_SUBSCRIBED_NORMAL;
 				if (preg_match('/INPUT .*name="' . $str_email . '_digest".* value="on"/i', $httpreq->data))
 				{
 					$subscription['status'] = self::USER_MAILMAN_REGISTER_SUBSCRIBED_DIGEST;
