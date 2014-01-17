@@ -34,8 +34,8 @@ After following the installation instructions, find the "Mailman" menu item on t
 
 == Changelog ==
 
-= 1.0 =
+= 1.0.0 =
 * Initial Release
 
-= 1.1 =
-* Fixed a not valid array bug on intial installation.
+= 1.0.1 =
+* Fixed a not valid array bug on initial installation.
