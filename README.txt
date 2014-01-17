@@ -39,3 +39,6 @@ After following the installation instructions, find the "Mailman" menu item on t
 
 = 1.0.1 =
 * Fixed a not valid array bug on initial installation.
+
+= 1.0.2 =
+* Fixed bug where an administrator couldn't change user's subscription preferences
