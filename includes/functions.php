@@ -23,7 +23,7 @@ function gm_get_update_frequency(){
 function gm_get_mailing_lists(){
 	$listArray = unserialize(get_site_option('gnumailman_lists'));
 	if (!is_array($listArray))
-		die('$listArray is NOT a valid array');
+		return array();
 
 	return $listArray;
 }
