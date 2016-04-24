@@ -4,36 +4,35 @@
 *******************************************/
 
 /**
- * On Wordpress User Registration, auto subscribe user to
+ * On WordPress User Registration, auto subscribe user to
  * all lists that are set to be autosubscribed.
  *
  * @since   1.0.0
- * @param	int	$userId	Wordpress User Id
+ * @param	int	$user_id	WordPress User Id.
  */
-function gm_on_register($userId) {
-	foreach (gm_get_mailing_lists() as $listId => $list) {
-		if ($list['autosub']) {
-			// Subscribe User to List
-			gm_subscribe_user_list($listId, $userId);
+function gm_on_register( $user_id ) {
+	foreach ( gm_get_mailing_lists() as $list_id => $list ) {
+		if ( $list['autosub'] ) {
+			// Subscribe User to List.
+			gm_subscribe_user_list( $list_id, $user_id );
 		}
 	}
 }
 
-add_action('user_register', 'gm_on_register');
-
+add_action( 'user_register', 'gm_on_register' );
 
 /**
- * On Wordpress User Delete, unsubscribe user to all the mailing
+ * On WordPress User Delete, unsubscribe user to all the mailing
  * lists they are current subscribed to.
  *
  * @since   1.0.0
- * @param	int	$userId	Wordpress User Id
+ * @param	int	$user_id	WordPress User Id.
  */
-function gm_on_delete($userId) {
-	foreach (gm_get_user_subscriptions($userId) as $listId => $list) {
-		// Unsubscribe User to List
-		gm_unsubscribe_user_list($listId, $userId);
+function gm_on_delete( $user_id ) {
+	foreach ( gm_get_user_subscriptions( $user_id ) as $list_id => $list ) {
+		// Unsubscribe User to List.
+		gm_unsubscribe_user_list( $list_id, $user_id );
 	}
 }
 
-add_action('delete_user', 'gm_on_delete');
+add_action( 'delete_user', 'gm_on_delete' );

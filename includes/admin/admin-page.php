@@ -5,6 +5,7 @@
 
 /**
  * Admin Area - Main Page HTML
+ *
  * @since   1.0.0
  */
 function gm_admin_page() {
@@ -16,8 +17,9 @@ function gm_admin_page() {
 	<div class="updated"></div>
 
 	<div class=wrap>
-		<h2>Wordpress-Mailman Integration</h2>
+		<h2>WordPress-Mailman Integration</h2>
 		<h3>Welcome!</h3>
+		<p>You are currently running version <?php echo GM_PLUGIN_VERSION; ?>. For support, please visit the <a href="http://wordpress.org/support/plugin/gnu-mailman-integration">Wordpress Plugin page</a></p>
 	</div>
 <?php
 }

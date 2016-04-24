@@ -3,9 +3,9 @@
  * GNU-Mailman Integration
  *
  * @package   Mailman
- * @author    Ryan Gyure <me@ryan.gy>
+ * @author	Ryan Gyure <me@ryan.gy>
  * @license   GPL-2.0+
- * @link      http://blog.ryan.gy/applications/wordpress/gnu-mailman/
+ * @link	  http://blog.ryan.gy/applications/wordpress/gnu-mailman/
  * @copyright 2014 Ryan Gyure
  */
 
@@ -22,7 +22,7 @@ class Mailman
 	 * Subscription Action: do unsubscription
 	 *
 	 * @since   1.0.0
-	 * @var     int
+	 * @var	 int
 	 */
 	const USER_MAILMAN_REGISTER_DO_UNSUBSCRIBE = -1;
 
@@ -30,7 +30,7 @@ class Mailman
 	 * Subscription Status: unsubscribed
 	 *
 	 * @since   1.0.0
-	 * @var     int
+	 * @var	 int
 	 */
 	const USER_MAILMAN_REGISTER_UNSUBSCRIBED = 0;
 
@@ -38,7 +38,7 @@ class Mailman
 	 * Subscription Status: subscribed but temporarily disabled
 	 *
 	 * @since   1.0.0
-	 * @var     int
+	 * @var	 int
 	 */
 	const USER_MAILMAN_REGISTER_SUBSCRIBED_DISABLED = 1;
 
@@ -46,7 +46,7 @@ class Mailman
 	 * Subscription Status: subscribed, receive digests
 	 *
 	 * @since   1.0.0
-	 * @var     int
+	 * @var	 int
 	 * @todo	Need to complete functionality associated with this value.
 	 */
 	const USER_MAILMAN_REGISTER_SUBSCRIBED_DIGEST = 2;
@@ -55,7 +55,7 @@ class Mailman
 	 * Subscription Status: subscribed, normal delivery
 	 *
 	 * @since   1.0.0
-	 * @var     int
+	 * @var	 int
 	 */
 	const USER_MAILMAN_REGISTER_SUBSCRIBED_NORMAL = 3;
 
@@ -63,7 +63,7 @@ class Mailman
 	 * Mailing List URL
 	 *
 	 * @since   1.0.0
-	 * @var     string
+	 * @var	 string
 	 */
 	private $_mailingListUrl;
 
@@ -71,7 +71,7 @@ class Mailman
 	 * Mailing List Password
 	 *
 	 * @since   1.0.0
-	 * @var     string
+	 * @var	 string
 	 */
 	private $_mailingListPassword;
 
@@ -79,7 +79,7 @@ class Mailman
 	 * Full Name of User
 	 *
 	 * @since   1.0.0
-	 * @var     string
+	 * @var	 string
 	 */
 	private $_fullName;
 
@@ -87,26 +87,32 @@ class Mailman
 	 * Email Address of User
 	 *
 	 * @since   1.0.0
-	 * @var     string
+	 * @var	 string
 	 */
 	private $_emailAddress;
 
 	/**
-	 * Initialize the plugin by setting the mailing list URL and password as well as the user's email
+	 * Initialize the plugin by setting the mailing list
+	 * URL and password as well as the user's email
 	 * and user's full name.
 	 *
-	 * @since     1.0.0
+	 * @since	 1.0.0
 	 */
-	function __construct($mailingListUrl, $mailingListPassword, $emailAddress = NULL, $fullName = NULL)
+	function __construct(
+		$mailingListUrl,
+		$mailingListPassword,
+		$emailAddress = NULL,
+		$fullName = NULL
+	)
 	{
 		$this->_mailingListUrl = $mailingListUrl;
 		$this->_mailingListPassword = $mailingListPassword;
 
 		if ($this->_mailingListUrl == '')
-			die('Mailing List URL Must Be Specified');
+			throw new Exception('Mailing List URL Must Be Specified');
 
 		if ($this->_mailingListPassword == '')
-			die('Mailing List Password Must Be Specified');
+			throw new Exception('Mailing List Password Must Be Specified');
 
 		$this->_emailAddress = $emailAddress;
 		$this->_fullName = $fullName;
@@ -118,11 +124,19 @@ class Mailman
 	 * @since	1.0.0
 	 * @return	bool
 	 */
-	public function isUserSubscribed() {
-		$sub = $this->_mailman_get_subscription();
+	public function isUserSubscribed()
+	{
+		try{
+			// HTTP Request
+			$sub = $this->_mailman_get_subscription();
+		} catch (Exception $e) {
+			// Unable to connect for some reason.
+			return FALSE;
+		}
 		
-		if ($sub == self::USER_MAILMAN_REGISTER_SUBSCRIBED_NORMAL OR $sub == self::USER_MAILMAN_REGISTER_SUBSCRIBED_DIGEST)
-		{
+		if ($sub == self::USER_MAILMAN_REGISTER_SUBSCRIBED_NORMAL OR
+			$sub == self::USER_MAILMAN_REGISTER_SUBSCRIBED_DIGEST
+		) {
 			return TRUE;
 		}
 		
@@ -135,8 +149,11 @@ class Mailman
 	 * @since	1.0.0
 	 * @return	boolean
 	 */
-	public function subscribe() {
-		return $this->_mailman_subscription_update(self::USER_MAILMAN_REGISTER_SUBSCRIBED_NORMAL);
+	public function subscribe()
+	{
+		return $this->_mailman_subscription_update(
+			self::USER_MAILMAN_REGISTER_SUBSCRIBED_NORMAL
+		);
 	}
 
 	/**
@@ -145,8 +162,36 @@ class Mailman
 	 * @since   1.0.0
 	 * @return	boolean
 	 */
-	public function unsubscribe() {
-		return $this->_mailman_subscription_update(self::USER_MAILMAN_REGISTER_DO_UNSUBSCRIBE);
+	public function unsubscribe()
+	{
+		return $this->_mailman_subscription_update(
+			self::USER_MAILMAN_REGISTER_DO_UNSUBSCRIBE
+		);
+	}
+	
+	/**
+	 * Check to see if we can connect to a mailing list
+	 *
+	 * @since	1.0.3
+	 * @return	array
+	 */
+	public function canConnect()
+	{
+		$regurl = rtrim($this->_mailingListUrl, '/') . '/members?findmember=.';
+		$regurl .= "&setmemberopts_btn&adminpw=" . urlencode($this->_mailingListPassword);
+		
+		$error = '';
+		$connected = false;
+		
+		try{
+			// HTTP Request
+			$this->_mailman_parse_http($regurl);
+			$connected = true;
+		} catch (Exception $e) {
+			$error = $e->getMessage();
+		}
+		
+		return array('connected' => $connected, 'error' => $error);
 	}
 
 	private function _mailman_get_subscription()
@@ -179,9 +224,19 @@ class Mailman
 				if (preg_match('/INPUT .*name="' . $str_email . '_nomail".* value="on" CHECKED >(\[\w\])/i', $httpreq->data, $match))
 				{
 					$subscription['status'] = self::USER_MAILMAN_REGISTER_SUBSCRIBED_DISABLED;
-					if ($match[1] != t("[A]"))
-					{
-						$subscription['error'] = "Delivery for list was disabled by the system probably due to excessive bouncing from the member's address";
+
+					switch($match[1]){
+						case '[A]':
+							$subscription['error'] = 'Delivery for list was disabled by the list administrator.';
+							break;
+
+						case '[B]':
+							$subscription['error'] = 'Delivery for list was disabled by the system probably due to excessive bouncing from the member\'s address.';
+							break;
+
+						default:
+							$subscription['error'] = 'Delivery for list was disabled for an unknown reason.';
+							break;
 					}
 				}
 			}
@@ -193,7 +248,8 @@ class Mailman
 		return $subscription['status'];
 	}
 
-	private function _mailman_subscription_update($actionType) {
+	private function _mailman_subscription_update($actionType)
+	{
 		$msg = '';
 		$regurl = rtrim($this->_mailingListUrl, '/') . '/members';
 
@@ -235,11 +291,8 @@ class Mailman
 
 		// HTTP Request
 		$httpreq = $this->_mailman_parse_http($regurl);
-		if ($httpreq->umr_ok)
-		{
-			$msg .= ' list successfully completed for ' . $this->_fullName . '<' . $this->_emailAddress . '>';
-		} else {
-			die($httpreq->umr_usrmsg);
+		if (!$httpreq->umr_ok) {
+			wp_die($httpreq->umr_usrmsg);
 			return FALSE;
 		}
 
@@ -257,39 +310,47 @@ class Mailman
 	{
 		// Get cURL resource
 		$curl = curl_init();
+		$defaultTimeout = gm_get_default_timeout();
+		$defaultTimeout = (is_int($defaultTimeout) AND
+						   $defaultTimeout > 0) ? $defaultTimeout : 30;
 
 		// Set some options - we are passing in a useragent too here
-		curl_setopt_array($curl, array(CURLOPT_RETURNTRANSFER => 1, CURLOPT_URL => $regurl, CURLOPT_USERAGENT => 'GNU-Mailman-Wordpress',));
+		curl_setopt_array(
+			$curl, array(
+			CURLOPT_RETURNTRANSFER => 1,
+			CURLOPT_URL => $regurl,
+			CURLOPT_USERAGENT => 'GNU-Mailman-Wordpress',)
+		);
 		curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);
 		curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
+		curl_setopt($curl, CURLOPT_TIMEOUT, $defaultTimeout);
 
-		// Send the request & save response to $resp
+		// Send the request
 		$httpobj = new stdClass();
 		$httpobj->umr_ok = 1;
-		$httpobj->data = $resp = curl_exec($curl);
+		$httpobj->data = curl_exec($curl);
 		$httpobj->code = 200;
 
 		// Check for errors
 		if (!curl_exec($curl))
 		{
 			$httpobj->code = 400;
-			die('Error: "' . curl_error($curl) . '" - Code: ' . curl_errno($curl));
+			throw new Exception('Error: "' . curl_error($curl) . '" - Code: ' . curl_errno($curl));
 		}
 
 		// Close request to clear up some resources
 		curl_close($curl);
 
+		// Error Checking
 		if ($httpobj->code <> 200 || !preg_match('/INPUT .*name="(findmember|setmemberopts)_btn"/i', $httpobj->data))
 		{
-			$httpobj->umr_ok = 0;
-			$httpobj->umr_usrmsg = 'Sorry, mailing list registration is currently unavailable. Please, try again shortly.';
 			if (preg_match('/<input type="password".* name="adminpw"/i', $httpobj->data))
-			{
-				$httpobj->umr_admmsg = 'The administrator web password for list is invalid.';
-			} else
-			{
-				$httpobj->umr_admmsg = 'No mailman web interface for list.';
-			}
+				throw new Exception('The administrator web password for List (' . $this->_mailingListUrl . ') is invalid.');
+				
+			if (preg_match('/No such list/i', $httpobj->data))
+				throw new Exception('The List (' . $this->_mailingListUrl . ') does not exist.');
+			
+			throw new Exception('Sorry, mailing List (' . $this->_mailingListUrl . ') registration is currently unavailable. Please, try again shortly.');
 		}
 
 		return $httpobj;

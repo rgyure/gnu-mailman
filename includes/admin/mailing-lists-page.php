@@ -5,11 +5,12 @@
 
 /**
  * Admin Area - Mailing Lists Page HTML
+ *
  * @since   1.0.0
  */
 function gm_mailing_lists_page() {
 
-	if ( !current_user_can( 'manage_options' ) )  {
+	if ( ! current_user_can( 'manage_options' ) ) {
 		wp_die( __( 'You do not have sufficient permissions to access this page.' ) );
 	}
 	?>
@@ -21,48 +22,58 @@ function gm_mailing_lists_page() {
 			<h2>Wordpress-Mailman Integration</h2>
 
 			<?php
-			// POST Update Messages
-			if( $_GET['gm_message'] == 'list_edit')
+			// POST Update Messages.
+			if( true === isset( $_GET[ 'gm_message' ] ) &&
+			    $_GET[ 'gm_message' ] === 'list_edit' ) {
 				echo '<div class="updated"><p>Mailing Lists Updated</p></div>';
+			}
 
-			if( $_GET['gm_message'] == 'list_add')
+			if( true === isset($_GET[ 'gm_message' ] ) &&
+			    $_GET[ 'gm_message' ] === 'list_add' ) {
 				echo '<div class="updated"><p>Mailing List Added</p></div>';
+			}
 
-			if( $_GET['gm_message'] == 'list_removed')
+			if( true === isset($_GET[ 'gm_message' ] ) &&
+			    $_GET[ 'gm_message' ] == 'list_removed' ) {
 				echo '<div class="updated"><p>Mailing List Removed</p></div>';
+			}
+			
+			if( true === isset($_GET[ 'gm_error' ] ) ) {
+				echo '<div class="error"><p>' . urldecode( $_GET['gm_error'] ) . '</p></div>';
+			}
 			?>
 
 			<h3><?php _e('Mailing Lists', 'gm') ?></h3>
 			<table class="form-table">
 				<?php
-				$mailingLists = gm_get_mailing_lists();
-				foreach ($mailingLists as $listId => $list){
+				$mailing_lists = gm_get_mailing_lists();
+				foreach ( $mailing_lists as $list ) {
 				?>
 				<tr valign="top">
 					<th scope="row">Mailing List Name</th>
 					<td>
-						<input type="text" name="<?php echo $listId; ?>_name" class="regular-text code" value="<?php echo $list['name']; ?>" />
+						<input type="text" name="<?php echo $list['id']; ?>_name" class="regular-text code" value="<?php echo $list['name']; ?>" />
 					</td>
 				</tr>
 
 				<tr valign="top">
 					<th scope="row">Mailing List URL</th>
 					<td>
-						<input type="text" name="<?php echo $listId; ?>_url" class="regular-text code" value="<?php echo $list['url']; ?>" />
+						<input type="text" name="<?php echo $list['id']; ?>_url" class="regular-text code" value="<?php echo $list['url']; ?>" />
 					</td>
 				</tr>
 
 				<tr valign="top">
 					<th scope="row">Mailing Password</th>
 					<td>
-						<input type="text" name="<?php echo $listId; ?>_pass" class="regular-text code" value="<?php echo $list['pass']; ?>" />
+						<input type="text" name="<?php echo $list['id']; ?>_pass" class="regular-text code" value="<?php echo $list['pass']; ?>" />
 					</td>
 				</tr>
 
 				<tr valign="top">
 					<th scope="row">Auto Subscribe on User Register?</th>
 					<td>
-						<select name="<?php echo $listId; ?>_autosub">
+						<select name="<?php echo $list['id']; ?>_autosub">
 							<option value="0" <?php if ($list['autosub'] == 0){ echo 'selected="selected"'; }?>>No</option>
 							<option value="1" <?php if ($list['autosub'] == 1){ echo 'selected="selected"'; }?>>Yes</option>
 						</select>
@@ -70,7 +81,7 @@ function gm_mailing_lists_page() {
 				</tr>
 
 				<tr>
-					<td colspan="2"><input type="button" name="<?php echo $listId; ?>_delete" class="button-primary" onClick="return confirm_delete('<?php echo $listId; ?>');" value="Delete <?php echo $listName; ?>" /></td>
+					<td colspan="2"><input type="button" name="<?php echo $list['id']; ?>_delete" class="button-primary" onClick="return confirm_delete('<?php echo $list['id']; ?>');" value="Delete <?php echo $list['name']; ?>" /></td>
 				</tr>
 
 				<tr>
@@ -79,7 +90,7 @@ function gm_mailing_lists_page() {
 				<?php } ?>
 			</table>
 
-			<?php if (count($mailingLists) > 0){ ?>
+			<?php if (count($mailing_lists) > 0){ ?>
 			<div class="submit"><input type="submit" name="info_update" class="button-primary" value="Update All Mailing Lists" /></div>
 			<?php } ?>
 		</form>

@@ -5,6 +5,7 @@
 
 /**
  * Admin Area - Settings Page HTML
+ *
  * @since   1.0.0
  */
 function gm_settings_page() {
@@ -20,7 +21,7 @@ function gm_settings_page() {
 		<h3>Settings</h3>
 
 		<?php
-		// POST Update Messages
+		// POST Update Messages.
 		if( $_GET['gm_message'] == 'updated')
 			echo '<div class="updated"><p>Settings Updated</p></div>';
 		?>
@@ -31,8 +32,16 @@ function gm_settings_page() {
 				<tr valign="top">
 					<th scope="row">Update Frequency</th>
 					<td>
-						<input type="text" name="update_frequency" class="regular-text code" value="<?php echo get_site_option('gnumailman_update_frequency'); ?>" /> seconds
+						<input type="text" name="update_frequency" class="regular-text code" value="<?php echo get_site_option( 'gnumailman_update_frequency' ); ?>" /> seconds
 					</td>
+					<td>How often the script should refresh data from the mailing lists.</td>
+				</tr>
+				<tr valign="top">
+					<th scope="row">Default Timeout</th>
+					<td>
+						<input type="text" name="default_timeout" class="regular-text code" value="<?php echo get_site_option( 'gnumailman_default_timeout' ); ?>" /> seconds
+					</td>
+					<td>How long the script should attempt to connect to a mailing list.</td>
 				</tr>
 			</table>
 

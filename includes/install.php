@@ -11,8 +11,10 @@
  */
 function gm_options_install() {
 
-	// Set Default Frequency
-	add_site_option('gnumailman_update_frequency', 60*60); // 1 Hour
+	// Set Default Frequency (1 Hour).
+	add_site_option( 'gnumailman_update_frequency', 60 * 60 );
+	// Set Timeout (30 Seconds).
+	add_site_option( 'gnumailman_default_timeout', 30 );
 
 }
 

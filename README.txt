@@ -3,7 +3,7 @@ Contributors: rgyure
 Donate link: http://www.ryangyure.com/
 Tags: mailman
 Requires at least: 3.8
-Tested up to: 3.8
+Tested up to: 4.5
 Stable tag: trunk
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -42,3 +42,20 @@ After following the installation instructions, find the "Mailman" menu item on t
 
 = 1.0.2 =
 * Fixed bug where an administrator couldn't change user's subscription preferences
+
+= 1.0.3 =
+* Fixed various PHP notices
+* Added support to verify Mailman list during creation
+* Added error logging and catching
+* Added Default Timeout to Settings Page
+
+= 1.0.4 =
+* Fixed display error when user was set to "nomail"
+
+= 1.0.5 =
+* Refactor Subscribe/Unsubscribe functions
+* PHP Code Standard Fixes
+* Fixed bug in user-forms.php where index ids would change when a list is added/removed
+
+== Known Issues ==
+* Re-enabling users set to "nomail" may not always work correctly.
