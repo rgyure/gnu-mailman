@@ -29,7 +29,7 @@ add_action( 'user_register', 'gm_on_register' );
  * @param	int	$user_id	WordPress User Id.
  */
 function gm_on_delete( $user_id ) {
-	foreach ( gm_get_user_subscriptions( $user_id ) as $list_id => $list ) {
+	foreach ( gm_get_user_subscriptions( $user_id ) as $list_id ) {
 		// Unsubscribe User to List.
 		gm_unsubscribe_user_list( $list_id, $user_id );
 	}
