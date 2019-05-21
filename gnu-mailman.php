@@ -5,6 +5,7 @@
  * @package   Mailman
  *
  * @author	Ryan Gyure <me@ryan.gy>
+ * @contributors Sander Steffann <sander@steffann.nl>
  * @license   GPL-2.0+
  * @link	  http://blog.ryan.gy/applications/wordpress/gnu-mailman/
  * @copyright 2014 Ryan Gyure
@@ -13,7 +14,7 @@
  * Plugin Name:	   GNU-Mailman Integration
  * Plugin URI:		http://blog.ryan.gy/applications/wordpress/gnu-mailman/
  * Description:	   GNU-Mailman integration with Wordpress
- * Version:		   1.0.5
+ * Version:		   1.0.6
  * Author:			Ryan Gyure
  * Author URI:		http://www.ryangyure.com/
  * License:		   GPL-2.0+
@@ -31,7 +32,7 @@ if ( ! defined( 'GM_PLUGIN_DIR' ) ) {
 }
 
 if ( ! defined( 'GM_PLUGIN_VERSION' ) ) {
-	define( 'GM_PLUGIN_VERSION', '1.0.5' );
+	define( 'GM_PLUGIN_VERSION', '1.0.6' );
 }
 
 if ( ! defined( 'GM_PLUGIN_FILE' ) ) {

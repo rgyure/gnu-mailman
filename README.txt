@@ -1,5 +1,5 @@
 === Plugin Name ===
-Contributors: rgyure
+Contributors: rgyure, steffann
 Donate link: http://www.ryangyure.com/
 Tags: mailman
 Requires at least: 3.8
@@ -32,6 +32,18 @@ Integrate GNU Mailman into your Wordpress website.  This script allows administr
 
 After following the installation instructions, find the "Mailman" menu item on the left-hand menu.  Click on the "Lists" submenu.  Enter in the Mailing List Name (for display purposes), the mailing list URL (e.g. http://srv.test.com/mailman/admin/test_test.com), and the mailing list password.
 
+= What is the github URL? =
+
+https://github.com/rgyure/gnu-mailman
+
+= How can I help contribute? =
+
+View the code on github and fork the current repo (https://github.com/rgyure/gnu-mailman). When finished, submit a pull request and I will incorporate changes.
+
+= Who has helped contribute? =
+
+Sander Steffann <sander@steffann.nl>
+
 == Changelog ==
 
 = 1.0.0 =
@@ -56,6 +68,9 @@ After following the installation instructions, find the "Mailman" menu item on t
 * Refactor Subscribe/Unsubscribe functions
 * PHP Code Standard Fixes
 * Fixed bug in user-forms.php where index ids would change when a list is added/removed
+
+= 1.0.6 =
+* Fix gm_on_delete function (Sander Steffann)
 
 == Known Issues ==
 * Re-enabling users set to "nomail" may not always work correctly.
